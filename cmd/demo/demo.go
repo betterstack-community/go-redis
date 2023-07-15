@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"github.com/go-redis/redis"
+	"github.com/redis/go-redis/v9"
+	"github.com/woojiahao/go_redis/internal/utility"
 	"time"
 )
 
@@ -29,22 +31,23 @@ func getDataExpensive() {
 }
 
 func getDataCached() {
+	ctx := context.Background()
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Addr:     utility.Address(),
+		Password: utility.Password(), // no password set
+		DB:       utility.Database(), // use default DB
 	})
 	// Ensure that the connection is properly closed gracefully
 	defer rdb.Close()
 
 	for i := 0; i < 3; i++ {
 		fmt.Println("\tBefore query")
-		val, err := rdb.Get("query").Result()
+		val, err := rdb.Get(ctx, "query").Result()
 		if err != nil {
 			// Database query was not cached yet
 			// Make database call and cache the value
 			val = databaseQuery()
-			rdb.Set("query", val, 0)
+			rdb.Set(ctx, "query", val, 0)
 		}
 		fmt.Printf("\tAfter query with result %s\n", val)
 	}
