@@ -1,10 +1,11 @@
 package utility
 
 import (
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 func loadEnv() {

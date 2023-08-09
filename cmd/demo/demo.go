@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/redis/go-redis/v9"
 	"github.com/woojiahao/go_redis/internal/utility"
-	"time"
 )
 
 func main() {
